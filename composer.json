@@ -1,0 +1,29 @@
+{
+    "name": "emekaorjiani/linkio",
+    "description": "Laravel package for LinkIO integration",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "EmekaOrjiani\\LinkIO\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+          "providers": [
+            "EmekaOrjiani\\LinkIO\\LinkIOServiceProvider"
+          ],
+          "aliases": {
+            "LinkIO": "EmekaOrjiani\\LinkIO\\Facades\\LinkIO"
+          }
+        }
+    },
+    "authors": [
+        {
+            "name": "DoctorVee Orjiani",
+            "email": "emekaorjiani@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
