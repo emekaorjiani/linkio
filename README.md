@@ -332,9 +332,3 @@ Fork the repo → create a feature branch → submit a pull request.
 
 ---
 
-Let me know if you'd like to:
-- Customize the **future roadmap** section  
-- Include **live API testing** guidance  
-- Add **GitHub Actions** for tests  
-- Publish to **Packagist**
-
