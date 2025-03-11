@@ -15,9 +15,12 @@ class LinkIOServiceProvider extends ServiceProvider
     public function register(): void
     {
         // 1. Merge the config (correct path for config directory)
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/linkio.php', 'linkio'
-        );
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../../config/linkio.php' => config_path('linkio.php'),
+            ], 'linkio-config');
+        }
+        
 
         // 2. Bind the LinkIOClient singleton
         $this->app->singleton(LinkIOClient::class, function ($app) {
