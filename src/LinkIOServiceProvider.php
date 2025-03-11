@@ -9,40 +9,47 @@ use EmekaOrjiani\LinkIO\Services\LinkIOClient;
 
 class LinkIOServiceProvider extends ServiceProvider
 {
-    public function register()
+    /**
+     * Register services.
+     */
+    public function register(): void
     {
-        // 1. Merge config
+        // 1. Merge the config (correct path for config directory)
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/linkio.php', 'linkio'
+            __DIR__ . '/../../config/linkio.php', 'linkio'
         );
 
-        // 2. Bind our LinkIOClient singleton
-        $this->app->singleton(LinkIOClient::class, function($app) {
+        // 2. Bind the LinkIOClient singleton
+        $this->app->singleton(LinkIOClient::class, function ($app) {
             return new LinkIOClient();
         });
 
-        // 3. Optionally bind a single entry for the facade
+        // 3. Register the services for Facade
         $this->app->singleton('linkio', function ($app) {
-            // Return an array or a manager object with references to each service
-            return [
-                'onRamp'  => $app->make(\EmekaOrjiani\LinkIO\Services\OnRampService::class),
-                'offRamp' => $app->make(\EmekaOrjiani\LinkIO\Services\OffRampService::class),
-                'bridge'  => $app->make(\EmekaOrjiani\LinkIO\Services\BridgeService::class),
-                'rates'   => $app->make(\EmekaOrjiani\LinkIO\Services\RatesService::class),
-            ];
+            return new LinkIOManager($app);
         });
+
+        // 4. Register the services individually (optional)
+        $this->app->singleton(\EmekaOrjiani\LinkIO\Services\OnRampService::class);
+        $this->app->singleton(\EmekaOrjiani\LinkIO\Services\OffRampService::class);
+        $this->app->singleton(\EmekaOrjiani\LinkIO\Services\BridgeService::class);
+        $this->app->singleton(\EmekaOrjiani\LinkIO\Services\RatesService::class);
     }
 
-    public function boot()
+    /**
+     * Bootstrap services.
+     */
+    public function boot(): void
     {
-        // 4. Publish the config
+        // 5. Publish the config
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/linkio.php' => config_path('linkio.php'),
+                __DIR__ . '/../../config/linkio.php' => config_path('linkio.php'),
             ], 'linkio-config');
         }
 
-        // 5. Register middleware alias for webhook signature
-        $this->app['router']->aliasMiddleware('linkio.signature', EnsureSignature::class);
+        // 6. Register the middleware alias for webhook verification
+        $router = $this->app['router'];
+        $router->aliasMiddleware('linkio.signature', EnsureSignature::class);
     }
 }

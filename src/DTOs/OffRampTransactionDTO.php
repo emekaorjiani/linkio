@@ -2,7 +2,7 @@
 
 namespace EmekaOrjiani\LinkIO\DTOs;
 
-class OffRampTransactionDTO
+final class OffRampTransactionDTO
 {
     public string $transactionId;
     public float $cryptoAmount;
@@ -18,16 +18,34 @@ class OffRampTransactionDTO
     public static function fromArray(array $data): self
     {
         $dto = new self();
-        $dto->transactionId       = $data['transaction_id'] ?? '';
-        $dto->cryptoAmount        = (float) ($data['crypto_amount'] ?? 0);
-        $dto->cryptoCurrency      = $data['crypto_currency'] ?? '';
-        $dto->fiatAmount          = (float) ($data['fiat_amount'] ?? 0);
-        $dto->fiatCurrency        = $data['fiat_currency'] ?? '';
-        $dto->recipientBankAccount = $data['recipient_bank_account'] ?? '';
-        $dto->status              = $data['status'] ?? 'pending';
-        $dto->createdAt           = $data['created_at'] ?? '';
-        $dto->completedAt         = $data['completed_at'] ?? null;
-        $dto->raw                 = $data;
+
+        $dto->transactionId        = (string) ($data['transaction_id'] ?? '');
+        $dto->cryptoAmount         = isset($data['crypto_amount']) ? (float) $data['crypto_amount'] : 0.0;
+        $dto->cryptoCurrency       = (string) ($data['crypto_currency'] ?? '');
+        $dto->fiatAmount           = isset($data['fiat_amount']) ? (float) $data['fiat_amount'] : 0.0;
+        $dto->fiatCurrency         = (string) ($data['fiat_currency'] ?? '');
+        $dto->recipientBankAccount = (string) ($data['recipient_bank_account'] ?? '');
+        $dto->status               = (string) ($data['status'] ?? 'pending');
+        $dto->createdAt            = (string) ($data['created_at'] ?? now()->toISOString());
+        $dto->completedAt          = $data['completed_at'] ?? null;
+
+        $dto->raw = $data;
+
         return $dto;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'transaction_id'        => $this->transactionId,
+            'crypto_amount'         => $this->cryptoAmount,
+            'crypto_currency'       => $this->cryptoCurrency,
+            'fiat_amount'           => $this->fiatAmount,
+            'fiat_currency'         => $this->fiatCurrency,
+            'recipient_bank_account'=> $this->recipientBankAccount,
+            'status'                => $this->status,
+            'created_at'            => $this->createdAt,
+            'completed_at'          => $this->completedAt,
+        ];
     }
 }

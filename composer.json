@@ -8,6 +8,13 @@
             "EmekaOrjiani\\LinkIO\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "EmekaOrjiani\\LinkIO\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "laravel": {
           "providers": [
@@ -24,6 +31,7 @@
             "email": "emekaorjiani@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {}
+    "require-dev": {
+        "orchestra/testbench": "^10.1"
+    }
 }
